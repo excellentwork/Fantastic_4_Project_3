@@ -20,11 +20,6 @@ https://drive.google.com/drive/folders/1RdqEY7EuOLFJiNlVzFkAfuFKJ8si82bb?usp=dri
 - NumPy
 - Matplotlib
 
-## Installation
-To install the required libraries, run the following command:
-```bash
-pip install tensorflow keras huggingface transformers numpy matplotlib pillow
-
 
 
 ## Model Implementation
@@ -36,12 +31,14 @@ Primary models are used in this project:
 
 
 ## Model Optimization
-
+xxxx
+xxxx
 
 
 
 ## Github Documentation
-
+xxxx
+xxxx
 
 
 
@@ -49,17 +46,22 @@ For the presentation we provided an execuitve summary,
 
 
 ## Usage
-To train the models, run the provided Jupyter notebooks which include step-by-step instructions and code cells.
-
+To train the models, we ran the provided coe via colab and Jupyter notebooks.
+xxxx
+xxxx
 
 
 ## Evaluation
-The models are evaluated using a separate test dataset to determine their accuracy and loss. The evaluation metrics are printed at the end of the testing phase.
+The models are evaluated using a separate test dataset to determine their accuracy and loss. 
+
+The evaluation metrics are printed at the end of the testing phase.
 
 
 
 ## Results
 The results section will be updated upon completion of the model training and evaluation.
+xxxx
+xxxx
 
 
 
@@ -67,10 +69,22 @@ The results section will be updated upon completion of the model training and ev
 
 ## Contributing
 Contributions to this project are welcome. Please fork the repository and submit a pull request with your proposed changes.
+xxxx
+xxxx
+
 
 
 ## Acknowledgments
 The dataset providers
 The TensorFlow and Hugging Face teams for their excellent libraries
+xxxx
+xxxx
 
+
+## Installation
+To install the required libraries, run the following command:
+```bash
+pip install tensorflow keras huggingface transformers numpy matplotlib pillow
+xxxx
+xxxx
 
