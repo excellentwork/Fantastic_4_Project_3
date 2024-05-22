@@ -48,25 +48,22 @@ def evaluate_model(model, X_test, y_test):
     print('Test Loss:', loss)
     print('Test Accuracy:', accuracy)
 
-def plot_confusion_matrix(y_true, y_pred, classes, title='Confusion Matrix', cmap=plt.cm.Blues):
-    """
-    Plots a confusion matrix using seaborn's heatmap.
-    
-    Args:
-    y_true: Actual true labels.
-    y_pred: Model's predictions.
-    classes: Array of label names.
-    title: Title of the plot.
-    cmap: Color map of the heatmap.
-    """
-    cm = confusion_matrix(y_true, np.round(y_pred).astype(int))
-    
-    plt.figure(figsize=(8,6))
-    sns.heatmap(cm, annot=True, fmt='d', cmap=cmap, xticklabels=classes, yticklabels=classes)
-    plt.xlabel('Predicted Label')
-    plt.ylabel('True Label')
-    plt.title(title)
+def plot_confusion_matrix(model, X_test, y_test_encoded, class_names):
+    # Predict the classes for the test set
+    y_pred = model.predict(X_test)
+    y_pred_classes = np.argmax(y_pred, axis=1)
+    y_true_classes = np.argmax(y_test_encoded, axis=1)
+    # Compute the confusion matrix
+    cm = confusion_matrix(y_true_classes, y_pred_classes)
+    # Plot the confusion matrix
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=class_names, yticklabels=class_names)
+    plt.xlabel('Predicted')
+    plt.ylabel('True')
+    plt.title('Confusion Matrix')
     plt.show()
+class_names = ['hamburger', 'hotdog']
+
 
 from sklearn.metrics import precision_score, recall_score, f1_score
 import numpy as np
