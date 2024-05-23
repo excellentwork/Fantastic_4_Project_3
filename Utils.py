@@ -48,26 +48,6 @@ def evaluate_model(model, X_test, y_test):
     print('Test Loss:', loss)
     print('Test Accuracy:', accuracy)
 
-def plot_confusion_matrix(y_true, y_pred, classes, title='Confusion Matrix', cmap=plt.cm.Blues):
-    """
-    Plots a confusion matrix using seaborn's heatmap.
-    
-    Args:
-    y_true: Actual true labels.
-    y_pred: Model's predictions.
-    classes: Array of label names.
-    title: Title of the plot.
-    cmap: Color map of the heatmap.
-    """
-    cm = confusion_matrix(y_true, np.round(y_pred).astype(int))
-    
-    plt.figure(figsize=(8,6))
-    sns.heatmap(cm, annot=True, fmt='d', cmap=cmap, xticklabels=classes, yticklabels=classes)
-    plt.xlabel('Predicted Label')
-    plt.ylabel('True Label')
-    plt.title(title)
-    plt.show()
-
 from sklearn.metrics import precision_score, recall_score, f1_score
 import numpy as np
 
@@ -96,7 +76,69 @@ def calculate_additional_metrics(y_true, y_pred, threshold=0.5, average='binary'
     except Exception as e:
         print("Error calculating metrics:", e)
 
+
+
+def plot_confusion_matrix(y_true, y_pred, classes, title='Confusion Matrix', cmap=plt.cm.Blues):
+    """
+    Plots a confusion matrix using seaborn's heatmap.
+
+    Args:
+    y_true: Actual true labels.
+    y_pred: Model's predictions.
+    classes: Array of label names.
+    title: Title of the plot.
+    cmap: Color map of the heatmap.
+    """
+    cm = confusion_matrix(y_true, y_pred)
+    
+    plt.figure(figsize=(8,6))
+    sns.heatmap(cm, annot=True, fmt='d', cmap=cmap, xticklabels=classes, yticklabels=classes)
+    plt.xlabel('Predicted Label')
+    plt.ylabel('True Label')
+    plt.title(title)
+    plt.show()
+
+def format_predictions(y_true, y_pred):
+    """
+    Ensures y_pred is appropriately formatted as labels and plots the confusion matrix.
+
+    Args:
+    y_true: Actual true labels.
+    y_pred: Model's predictions, either probabilities or labels.
+    classes: Array of label names.
+    title: Title of the plot.
+    cmap: Color map of the heatmap.
+    """
+    # Check if y_pred contains probabilities (values between 0 and 1)
+    if y_pred.ndim == 1 and np.max(y_pred) <= 1 and np.min(y_pred) >= 0:
+        # If it's a binary classification with probabilities, round them to get labels
+        y_pred_labels = (y_pred > 0.5).astype(int)
+    elif y_pred.ndim == 2 and np.max(y_pred) <= 1 and np.min(y_pred) >= 0:
+        # If it's a multi-class classification with probabilities, take the argmax
+        y_pred_labels = np.argmax(y_pred, axis=1)
+    else:
+        # If y_pred is already labels
+        y_pred_labels = y_pred
+
+    return y_pred_labels
+
+def plot_confusion_matrix_with_formatting(y_true, y_pred, classes, title='Confusion Matrix', cmap=plt.cm.Blues):
+    """
+    Formats y_pred appropriately and plots the confusion matrix.
+
+    Args:
+    y_true: Actual true labels.
+    y_pred: Model's predictions.
+    classes: Array of label names.
+    title: Title of the plot.
+    cmap: Color map of the heatmap.
+    """
+    y_pred_labels = format_predictions(y_true, y_pred)
+    plot_confusion_matrix(y_true, y_pred_labels, classes, title, cmap)
+
 # Example usage:
-# y_test = [0, 1, 0, 1]
-# y_pred = [0.1, 0.9, 0.3, 0.76]  # Probabilities output from a model
-# calculate_additional_metrics(y_test, y_pred)
+# y_test = [0, 1, 0, 1]  # Actual labels
+# y_pred = model.predict(X_test)  # Predicted probabilities or labels
+# classes = ['Hamburger', 'Hotdog']
+# plot_confusion_matrix_with_formatting(y_test, y_pred, classes)
+
