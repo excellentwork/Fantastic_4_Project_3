@@ -53,7 +53,7 @@ Prepare a 10-minute presentation covering:
 
 Primary models are used in this project:
 1. **CNN Model**: Built using TensorFlow and Keras, this model includes layers for convolution, max pooling, and dense connections, along with dropout for regularization.
-2. Augmentation of this CNN model and teh Confusion Matrix.
+2. Augmentation of this CNN model and the Confusion Matrix.
 
 
 ## Project Details
@@ -64,7 +64,7 @@ Primary models are used in this project:
 
 
 ## Usage
-To train the models, we ran the provided coe via colab and Jupyter notebooks.
+To train the models, we ran the provided code via colab and Jupyter notebooks.
 
 
 ## Evaluation
@@ -72,9 +72,6 @@ The models are evaluated using a separate test dataset to determine their accura
 
 The evaluation metrics are printed at the end of the testing phase.
 
-Future analysis can be done with
- 
-**Transformer Model**: Leveraging Hugging Face's transformers library, this model uses a pre-trained Vision Transformer (ViT) to classify images.
 
 
 ## Contributing
