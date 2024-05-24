@@ -116,11 +116,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tensorflow.keras import models as keras_models
 
-import numpy as np
-import matplotlib.pyplot as plt
-from tensorflow.keras import models as keras_models
-
-def visualize_feature_maps(model, X_input, max_layers=8):
+def visualize_feature_maps(model, X_input, max_layers=8, max_features=10):
     # Create a model that will return these outputs, given the model input
     layer_outputs = [layer.output for layer in model.layers[:max_layers]]  # Extract outputs of the first `max_layers` layers
     activation_model = keras_models.Model(inputs=model.input, outputs=layer_outputs)
@@ -128,9 +124,13 @@ def visualize_feature_maps(model, X_input, max_layers=8):
     # Get activations
     activations = activation_model.predict(X_input)
     
+    # Print shapes of activations for debugging
+    for i, layer_activation in enumerate(activations):
+        print(f"Layer {i} activation shape: {layer_activation.shape}")
+    
     # Plot the feature maps
     for layer_activation in activations:
-        n_features = layer_activation.shape[-1]
+        n_features = min(layer_activation.shape[-1], max_features)  # Limit the number of features
         size = layer_activation.shape[1]
         display_grid = np.zeros((size, size * n_features))
         
