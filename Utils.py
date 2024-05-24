@@ -4,6 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix, precision_score, recall_score, f1_score
+from sklearn.metrics import roc_curve, auc
+from sklearn.metrics import precision_recall_curve
 import tensorflow as tf
 from tensorflow.keras.models import Model
 from tensorflow.keras import models as keras_models
@@ -175,4 +177,60 @@ def plot_cam(model, img_array, class_idx, last_conv_layer_name):
     heatmap = heatmap.numpy()
 
     plt.matshow(heatmap)
+    plt.show()
+
+
+def plot_precision_recall_curve(y_true, y_pred_probs):
+    precision, recall, _ = precision_recall_curve(y_true, y_pred_probs)
+
+    plt.figure()
+    plt.plot(recall, precision, lw=2, color='b', label='Precision-Recall curve')
+    plt.xlabel('Recall')
+    plt.ylabel('Precision')
+    plt.title('Precision-Recall Curve')
+    plt.legend(loc='best')
+    plt.show()
+
+def plot_roc_curve(y_true, y_pred_probs):
+    fpr, tpr, _ = roc_curve(y_true, y_pred_probs)
+    roc_auc = auc(fpr, tpr)
+
+    plt.figure()
+    plt.plot(fpr, tpr, color='darkorange', lw=2, label=f'ROC curve (area = {roc_auc:0.2f})')
+    plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title('Receiver Operating Characteristic')
+    plt.legend(loc='lower right')
+    plt.show()
+
+def plot_conv_filters(layer, layer_name):
+    filters, biases = layer.get_weights()
+    f_min, f_max = filters.min(), filters.max()
+    filters = (filters - f_min) / (f_max - f_min)
+
+    n_filters, ix = 6, 1
+    for i in range(n_filters):
+        f = filters[:, :, :, i]
+        for j in range(3):
+            ax = plt.subplot(n_filters, 3, ix)
+            ax.set_xticks([])
+            ax.set_yticks([])
+            plt.imshow(f[:, :, j], cmap='viridis')
+            ix += 1
+    plt.show()
+
+def plot_misclassified_examples(X_test, y_true, y_pred, class_names, num_examples=5):
+    misclassified_indices = np.where(y_true != y_pred)[0]
+    if len(misclassified_indices) < num_examples:
+        num_examples = len(misclassified_indices)
+    plt.figure(figsize=(10, 10))
+    for i in range(num_examples):
+        idx = misclassified_indices[i]
+        plt.subplot(1, num_examples, i+1)
+        plt.imshow(X_test[idx])
+        plt.title(f'True: {class_names[y_true[idx]]}\nPred: {class_names[y_pred[idx]]}')
+        plt.axis('off')
     plt.show()
