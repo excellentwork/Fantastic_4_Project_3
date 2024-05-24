@@ -116,9 +116,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tensorflow.keras import models as keras_models
 
-def visualize_feature_maps(model, X_input):
+import numpy as np
+import matplotlib.pyplot as plt
+from tensorflow.keras import models as keras_models
+
+def visualize_feature_maps(model, X_input, max_layers=8):
     # Create a model that will return these outputs, given the model input
-    layer_outputs = [layer.output for layer in model.layers[:8]]  # Extract outputs of the first 8 layers
+    layer_outputs = [layer.output for layer in model.layers[:max_layers]]  # Extract outputs of the first `max_layers` layers
     activation_model = keras_models.Model(inputs=model.input, outputs=layer_outputs)
     
     # Get activations
@@ -143,6 +147,8 @@ def visualize_feature_maps(model, X_input):
         plt.figure(figsize=(scale * n_features, scale))
         plt.grid(False)
         plt.imshow(display_grid, aspect='auto', cmap='viridis')
+        plt.show()
+
 
 # Class Activation Maps
 def plot_cam(model, img_array, class_idx, last_conv_layer_name):
