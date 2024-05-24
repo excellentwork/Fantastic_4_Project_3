@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix, precision_score, recall_score, f1_score
+import tensorflow as tf
 from tensorflow.keras.models import Model
 
 def plot_training_history(history):
@@ -68,8 +69,6 @@ def plot_confusion_matrix(y_true, y_pred, classes, title='Confusion Matrix', cma
     plt.title(title)
     plt.show()
 
-from sklearn.metrics import precision_score, recall_score, f1_score
-import numpy as np
 
 def calculate_additional_metrics(y_true, y_pred, threshold=0.5, average='binary'):
     """
@@ -111,10 +110,7 @@ def load_and_summarize_model(model_path):
     
     return model
 
-# Load and summarize each model
-models = [load_and_summarize_model(path) for path in model_paths]
-
-
+from tensorflow.keras import models
 def visualize_feature_maps(model, X_input):
     # Create a model that will return these outputs, given the model input
     layer_outputs = [layer.output for layer in model.layers[:8]]  # Extract outputs of the first 8 layers
