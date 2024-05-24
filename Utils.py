@@ -6,6 +6,7 @@ import seaborn as sns
 from sklearn.metrics import confusion_matrix, precision_score, recall_score, f1_score
 import tensorflow as tf
 from tensorflow.keras.models import Model
+from tensorflow.keras import models as keras_models
 
 def plot_training_history(history):
     """
@@ -110,11 +111,15 @@ def load_and_summarize_model(model_path):
     
     return model
 
-from tensorflow.keras import models
+
+import numpy as np
+import matplotlib.pyplot as plt
+from tensorflow.keras import models as keras_models
+
 def visualize_feature_maps(model, X_input):
     # Create a model that will return these outputs, given the model input
     layer_outputs = [layer.output for layer in model.layers[:8]]  # Extract outputs of the first 8 layers
-    activation_model = models.Model(inputs=model.input, outputs=layer_outputs)
+    activation_model = keras_models.Model(inputs=model.input, outputs=layer_outputs)
     
     # Get activations
     activations = activation_model.predict(X_input)
@@ -138,7 +143,6 @@ def visualize_feature_maps(model, X_input):
         plt.figure(figsize=(scale * n_features, scale))
         plt.grid(False)
         plt.imshow(display_grid, aspect='auto', cmap='viridis')
-
 
 # Class Activation Maps
 def plot_cam(model, img_array, class_idx, last_conv_layer_name):
