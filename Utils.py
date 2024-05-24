@@ -100,3 +100,69 @@ def calculate_additional_metrics(y_true, y_pred, threshold=0.5, average='binary'
 # y_test = [0, 1, 0, 1]
 # y_pred = [0.1, 0.9, 0.3, 0.76]  # Probabilities output from a model
 # calculate_additional_metrics(y_test, y_pred)
+
+# Function to load and summarize a model
+def load_and_summarize_model(model_path):
+    # Load the model
+    model = tf.keras.models.load_model(model_path)
+    
+    # Print the model summary
+    model.summary()
+    
+    return model
+
+# Load and summarize each model
+models = [load_and_summarize_model(path) for path in model_paths]
+
+
+def visualize_feature_maps(model, X_input):
+    # Create a model that will return these outputs, given the model input
+    layer_outputs = [layer.output for layer in model.layers[:8]]  # Extract outputs of the first 8 layers
+    activation_model = models.Model(inputs=model.input, outputs=layer_outputs)
+    
+    # Get activations
+    activations = activation_model.predict(X_input)
+    
+    # Plot the feature maps
+    for layer_activation in activations:
+        n_features = layer_activation.shape[-1]
+        size = layer_activation.shape[1]
+        display_grid = np.zeros((size, size * n_features))
+        
+        for i in range(n_features):
+            x = layer_activation[0, :, :, i]
+            x -= x.mean()
+            x /= x.std()
+            x *= 64
+            x += 128
+            x = np.clip(x, 0, 255).astype('uint8')
+            display_grid[:, i * size : (i + 1) * size] = x
+            
+        scale = 20. / n_features
+        plt.figure(figsize=(scale * n_features, scale))
+        plt.grid(False)
+        plt.imshow(display_grid, aspect='auto', cmap='viridis')
+
+
+# Class Activation Maps
+def plot_cam(model, img_array, class_idx, last_conv_layer_name):
+    grad_model = tf.keras.models.Model(
+        [model.inputs], [model.get_layer(last_conv_layer_name).output, model.output]
+    )
+
+    with tf.GradientTape() as tape:
+        last_conv_layer_output, preds = grad_model(img_array)
+        class_channel = preds[:, class_idx]
+
+    grads = tape.gradient(class_channel, last_conv_layer_output)
+    pooled_grads = tf.reduce_mean(grads, axis=(0, 1, 2))
+
+    last_conv_layer_output = last_conv_layer_output[0]
+    heatmap = last_conv_layer_output @ pooled_grads[..., tf.newaxis]
+    heatmap = tf.squeeze(heatmap)
+
+    heatmap = tf.maximum(heatmap, 0) / tf.math.reduce_max(heatmap)
+    heatmap = heatmap.numpy()
+
+    plt.matshow(heatmap)
+    plt.show()
