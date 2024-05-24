@@ -15,6 +15,9 @@ https://github.com/excellentwork/Fantastic_4_Project_3
 ## LINK TO IMAGES FOR PROJECT:  
 https://drive.google.com/drive/folders/1RdqEY7EuOLFJiNlVzFkAfuFKJ8si82bb?usp=drive_link
 
+## LINK TO PRESENTATION FOR PROJECT:  
+https://docs.google.com/presentation/d/e/2PACX-1vSvi2XnV5T61r5MyN6GtMsKUYRQqCZgFZnb8[…]Bix4umO4329uFgfdpAaOZ/pub?start=false&loop=true&delayms=15000
+
 
 ## Requirements
 - Python 3.8 or above
