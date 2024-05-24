@@ -130,24 +130,28 @@ def visualize_feature_maps(model, X_input, max_layers=8, max_features=10):
     
     # Plot the feature maps
     for layer_activation in activations:
-        n_features = min(layer_activation.shape[-1], max_features)  # Limit the number of features
-        size = layer_activation.shape[1]
-        display_grid = np.zeros((size, size * n_features))
-        
-        for i in range(n_features):
-            x = layer_activation[0, :, :, i]
-            x -= x.mean()
-            x /= x.std()
-            x *= 64
-            x += 128
-            x = np.clip(x, 0, 255).astype('uint8')
-            display_grid[:, i * size : (i + 1) * size] = x
+        # Check if the activation is 4D (batch_size, height, width, channels)
+        if len(layer_activation.shape) == 4:
+            n_features = min(layer_activation.shape[-1], max_features)  # Limit the number of features
+            size = layer_activation.shape[1]
+            display_grid = np.zeros((size, size * n_features))
             
-        scale = 20. / n_features
-        plt.figure(figsize=(scale * n_features, scale))
-        plt.grid(False)
-        plt.imshow(display_grid, aspect='auto', cmap='viridis')
-        plt.show()
+            for i in range(n_features):
+                x = layer_activation[0, :, :, i]
+                x -= x.mean()
+                x /= x.std()
+                x *= 64
+                x += 128
+                x = np.clip(x, 0, 255).astype('uint8')
+                display_grid[:, i * size : (i + 1) * size] = x
+                
+            scale = 20. / n_features
+            plt.figure(figsize=(scale * n_features, scale))
+            plt.grid(False)
+            plt.imshow(display_grid, aspect='auto', cmap='viridis')
+            plt.show()
+        else:
+            print(f"Skipping layer with shape {layer_activation.shape} (not 4D)")
 
 
 # Class Activation Maps
